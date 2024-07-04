@@ -37,6 +37,19 @@ document.getElementById('clientForm').addEventListener('submit', function(event)
 
     // Verificar que todas las validaciones pasen antes de enviar
     if (validCedula && validApellidos && validNombres && validDireccion && validTelefono && validCorreo) {
+        // Verificar si la cédula ya está registrada
+        let clients = localStorage.getItem('clients');
+        clients = clients ? JSON.parse(clients) : [];
+
+        // Buscar si la cédula ya existe en los clientes registrados
+        const cedulaExistente = clients.some(cliente => cliente.cedula === cedula);
+
+        if (cedulaExistente) {
+            alert('La cédula ingresada ya está registrada.');
+            return;
+        }
+
+        // Si la cédula no está registrada, agregar el cliente
         const clientData = {
             cedula,
             apellidos,
@@ -46,21 +59,11 @@ document.getElementById('clientForm').addEventListener('submit', function(event)
             correo
         };
 
-
-        let clients = localStorage.getItem('clients');
-        clients = clients ? JSON.parse(clients) : [];
         clients.push(clientData);
         localStorage.setItem('clients', JSON.stringify(clients));
 
-
-        
         console.log('Datos del Cliente:', clientData);
         alert('Datos enviados correctamente');
         document.getElementById('clientForm').reset();
     } 
 });
-
-
-
-
-    
